@@ -3,24 +3,20 @@ package tests;
 import models.*;
 import org.junit.jupiter.api.Test;
 
-import static helpers.CustomAllureListener.withCustomTemplates;
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.*;
-import static io.restassured.http.ContentType.JSON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static specs.ReqresSpec.*;
 
 public class ReqresTests {
 
     @Test
     void getSingleUserTest() {
         SingleUserResponseModel response = step("Отправляем запрос", () ->
-                given()
-                        .filter(withCustomTemplates())
-                        .log().all()
-                        .get("https://reqres.in/api/users/2")
+                given(reqresRequestSpec)
+                        .get("/api/users/2")
                         .then()
-                        .log().all()
-                        .statusCode(200)
+                        .spec(reqresResponseSpec200)
                         .extract().as(SingleUserResponseModel.class));
         step("Проверяем id в ответе", () ->
                 assertEquals("2", response.getData().getId()));
@@ -29,26 +25,19 @@ public class ReqresTests {
     @Test
     void getSingleUserNotFoundTest() {
         step("Отправляем запрос", () ->
-                given()
-                        .filter(withCustomTemplates())
-                        .log().all()
-                        .get("https://reqres.in/api/users/23")
+                given(reqresRequestSpec)
+                        .get("/api/users/23")
                         .then()
-                        .log().all()
-                        .statusCode(404));
+                        .spec(reqresResponseSpec404));
     }
-
 
     @Test
     void deleteSingleUserTest() {
         step("Отправляем запрос", () ->
-                given()
-                        .filter(withCustomTemplates())
-                        .log().all()
-                        .delete("https://reqres.in/api/users/2")
+                given(reqresRequestSpec)
+                        .delete("/api/users/2")
                         .then()
-                        .log().all()
-                        .statusCode(204));
+                        .spec(reqresResponseSpec204));
     }
 
     @Test
@@ -58,16 +47,12 @@ public class ReqresTests {
         registrationData.setPassword("pistol");
 
         RegistrationResponseModel response = step("Отправляем запрос", () ->
-                given()
-                        .filter(withCustomTemplates())
+                given(reqresRequestSpec)
                         .body(registrationData)
-                        .contentType(JSON)
-                        .log().all()
                         .when()
-                        .post("https://reqres.in/api/register")
+                        .post("/api/register")
                         .then()
-                        .log().all()
-                        .statusCode(200)
+                        .spec(reqresResponseSpec200)
                         .extract().as(RegistrationResponseModel.class));
         step("Проверяем id в ответе", () ->
                 assertEquals("4", response.getId()));
@@ -82,16 +67,12 @@ public class ReqresTests {
         updateData.setJob("zion resident");
 
         UpdateResponseModel response = step("Отправляем запрос", () ->
-                given()
-                        .filter(withCustomTemplates())
+                given(reqresRequestSpec)
                         .body(updateData)
-                        .contentType(JSON)
-                        .log().all()
                         .when()
-                        .put("https://reqres.in/api/users/2")
+                        .put("/api/users/2")
                         .then()
-                        .log().all()
-                        .statusCode(200)
+                        .spec(reqresResponseSpec200)
                         .extract().as(UpdateResponseModel.class));
         step("Проверяем name в ответе", () ->
                 assertEquals("morpheus", response.getName()));
