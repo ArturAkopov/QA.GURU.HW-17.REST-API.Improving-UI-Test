@@ -3,6 +3,8 @@ package tests;
 import models.*;
 import org.junit.jupiter.api.Test;
 
+import static helpers.CustomAllureListener.withCustomTemplates;
+import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.*;
 import static io.restassured.http.ContentType.JSON;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -11,35 +13,42 @@ public class ReqresTests {
 
     @Test
     void getSingleUserTest() {
-        SingleUserResponseModel response = given()
-                .log().all()
-                .get("https://reqres.in/api/users/2")
-                .then()
-                .log().all()
-                .statusCode(200)
-                .extract().as(SingleUserResponseModel.class);
-        assertEquals("2", response.getData().getId());
+        SingleUserResponseModel response = step("Отправляем запрос", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .log().all()
+                        .get("https://reqres.in/api/users/2")
+                        .then()
+                        .log().all()
+                        .statusCode(200)
+                        .extract().as(SingleUserResponseModel.class));
+        step("Проверяем id в ответе", () ->
+                assertEquals("2", response.getData().getId()));
     }
 
     @Test
     void getSingleUserNotFoundTest() {
-        given()
-                .log().all()
-                .get("https://reqres.in/api/users/23")
-                .then()
-                .log().all()
-                .statusCode(404);
+        step("Отправляем запрос", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .log().all()
+                        .get("https://reqres.in/api/users/23")
+                        .then()
+                        .log().all()
+                        .statusCode(404));
     }
 
 
     @Test
     void deleteSingleUserTest() {
-        given()
-                .log().all()
-                .delete("https://reqres.in/api/users/2")
-                .then()
-                .log().all()
-                .statusCode(204);
+        step("Отправляем запрос", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .log().all()
+                        .delete("https://reqres.in/api/users/2")
+                        .then()
+                        .log().all()
+                        .statusCode(204));
     }
 
     @Test
@@ -48,8 +57,9 @@ public class ReqresTests {
         registrationData.setEmail("eve.holt@reqres.in");
         registrationData.setPassword("pistol");
 
-        RegistrationResponseModel response =
+        RegistrationResponseModel response = step("Отправляем запрос", () ->
                 given()
+                        .filter(withCustomTemplates())
                         .body(registrationData)
                         .contentType(JSON)
                         .log().all()
@@ -58,9 +68,11 @@ public class ReqresTests {
                         .then()
                         .log().all()
                         .statusCode(200)
-                        .extract().as(RegistrationResponseModel.class);
-        assertEquals("4", response.getId());
-        assertEquals("QpwL5tke4Pnpja7X4", response.getToken());
+                        .extract().as(RegistrationResponseModel.class));
+        step("Проверяем id в ответе", () ->
+                assertEquals("4", response.getId()));
+        step("Проверяем token в ответе", () ->
+                assertEquals("QpwL5tke4Pnpja7X4", response.getToken()));
     }
 
     @Test
@@ -68,17 +80,22 @@ public class ReqresTests {
         UpdateBodyModel updateData = new UpdateBodyModel();
         updateData.setName("morpheus");
         updateData.setJob("zion resident");
-        UpdateResponseModel response = given()
-                .body(updateData)
-                .contentType(JSON)
-                .log().all()
-                .when()
-                .put("https://reqres.in/api/users/2")
-                .then()
-                .log().all()
-                .statusCode(200)
-                .extract().as(UpdateResponseModel.class);
-        assertEquals("morpheus", response.getName());
-        assertEquals("zion resident", response.getJob());
+
+        UpdateResponseModel response = step("Отправляем запрос", () ->
+                given()
+                        .filter(withCustomTemplates())
+                        .body(updateData)
+                        .contentType(JSON)
+                        .log().all()
+                        .when()
+                        .put("https://reqres.in/api/users/2")
+                        .then()
+                        .log().all()
+                        .statusCode(200)
+                        .extract().as(UpdateResponseModel.class));
+        step("Проверяем name в ответе", () ->
+                assertEquals("morpheus", response.getName()));
+        step("Проверяем job в ответе", () ->
+                assertEquals("zion resident", response.getJob()));
     }
 }
