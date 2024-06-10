@@ -4,9 +4,10 @@ import models.*;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
-import static io.restassured.RestAssured.*;
+import static io.restassured.RestAssured.given;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static specs.ReqresSpec.*;
+
 
 public class ReqresTests {
 
