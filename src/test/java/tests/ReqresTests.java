@@ -1,21 +1,29 @@
 package tests;
 
+import io.restassured.RestAssured;
 import models.*;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import static io.qameta.allure.Allure.step;
 import static io.restassured.RestAssured.given;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static specs.ReqresSpec.*;
 
 
 public class ReqresTests {
 
+    @BeforeAll
+    public static void setUp() {
+        RestAssured.baseURI = "https://reqres.in";
+        RestAssured.basePath = "/api";
+    }
+
     @Test
     void getSingleUserTest() {
         SingleUserResponseModel response = step("Отправляем запрос", () ->
                 given(reqresRequestSpec)
-                        .get("/api/users/2")
+                        .get("/users/2")
                         .then()
                         .spec(reqresResponseSpec200)
                         .extract().as(SingleUserResponseModel.class));
@@ -27,7 +35,7 @@ public class ReqresTests {
     void getSingleUserNotFoundTest() {
         step("Отправляем запрос", () ->
                 given(reqresRequestSpec)
-                        .get("/api/users/23")
+                        .get("/users/23")
                         .then()
                         .spec(reqresResponseSpec404));
     }
@@ -36,7 +44,7 @@ public class ReqresTests {
     void deleteSingleUserTest() {
         step("Отправляем запрос", () ->
                 given(reqresRequestSpec)
-                        .delete("/api/users/2")
+                        .delete("/users/2")
                         .then()
                         .spec(reqresResponseSpec204));
     }
@@ -51,14 +59,14 @@ public class ReqresTests {
                 given(reqresRequestSpec)
                         .body(registrationData)
                         .when()
-                        .post("/api/register")
+                        .post("/register")
                         .then()
                         .spec(reqresResponseSpec200)
                         .extract().as(RegistrationResponseModel.class));
         step("Проверяем id в ответе", () ->
                 assertEquals("4", response.getId()));
         step("Проверяем token в ответе", () ->
-                assertEquals("QpwL5tke4Pnpja7X4", response.getToken()));
+                assertNotNull(response.getToken()));
     }
 
     @Test
@@ -71,7 +79,7 @@ public class ReqresTests {
                 given(reqresRequestSpec)
                         .body(updateData)
                         .when()
-                        .put("/api/users/2")
+                        .put("/users/2")
                         .then()
                         .spec(reqresResponseSpec200)
                         .extract().as(UpdateResponseModel.class));

@@ -14,7 +14,6 @@ public class ReqresSpec {
     public static RequestSpecification reqresRequestSpec = with()
             .filter(withCustomTemplates())
             .contentType(JSON)
-            .baseUri("https://reqres.in")
             .log().all();
 
     public static ResponseSpecification reqresResponseSpec200 = new ResponseSpecBuilder()
