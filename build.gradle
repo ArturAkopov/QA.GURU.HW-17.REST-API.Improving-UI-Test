@@ -4,15 +4,21 @@ plugins {
     id 'io.freefair.lombok' version "8.6"
 }
 
+def allureVersion = "2.27.0",
+    restAssuredVersion = "5.4.0",
+    selenideVersion = "7.2.3",
+    junitVersion = "5.10.2",
+    slf4jVersion = "2.0.7"
+
 allure {
     report {
-        version.set("2.27.0")
+        version.set(allureVersion)
     }
     adapter { // отвечает за появление папочки build/allure-results
         aspectjWeaver.set(true) //обработка аннотации @Step
         frameworks {
             junit5 { //название фреймворка
-                adapterVersion.set("2.27.0") //версия интеграции фреймворка и Allure
+                adapterVersion.set(allureVersion) //версия интеграции фреймворка и Allure
             }
         }
     }
@@ -30,12 +36,14 @@ compileTestJava {
 }
 
 dependencies {
-    testImplementation (
-            'org.junit.jupiter:junit-jupiter:5.10.2',
-            'org.slf4j:slf4j-simple:2.0.7',
-            'io.rest-assured:rest-assured:5.4.0',
-            'io.rest-assured:json-schema-validator:5.4.0',
-            'io.qameta.allure:allure-rest-assured:2.27.0'
+    testImplementation(
+            "org.junit.jupiter:junit-jupiter:$junitVersion",
+            "org.slf4j:slf4j-simple:$slf4jVersion",
+            "com.codeborne:selenide:$selenideVersion",
+            "io.rest-assured:rest-assured:$restAssuredVersion",
+            "io.rest-assured:json-schema-validator:$restAssuredVersion",
+            "io.qameta.allure:allure-rest-assured:$allureVersion",
+            "io.qameta.allure:allure-selenide:$allureVersion"
     )
 }
 
