@@ -1,4 +1,7 @@
-## 16.REST-API.Model.Specification
-### Домашнее задание №16
+## 17. REST API. Улучшаем UI-тесты. 
+### Домашнее задание №17
 
-Доработать автотесты на [reqres.in](https://github.com/ArturAkopov/QA.GURU.HW-15.REST-API.REST-Assured/blob/main/README.md?plain=1) с моделями (lombok), спецификациями, allure (со степами) и сборкой в Jenkins.
+Разработать автотест на удаление товара из списка https://demoqa.com/profile
+Добавить степы, модели и спецификации
+Реализовать авторизацию с @WithLogin
+В качестве ответа приложить ссылку на репозиторий и Allure-отчет в Jenkins
