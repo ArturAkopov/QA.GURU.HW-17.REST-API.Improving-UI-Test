@@ -1,4 +1,4 @@
-package specs;
+package demoqa.specs;
 
 import io.restassured.builder.ResponseSpecBuilder;
 import io.restassured.filter.log.LogDetail;
@@ -9,25 +9,21 @@ import static helpers.CustomAllureListener.withCustomTemplates;
 import static io.restassured.RestAssured.with;
 import static io.restassured.http.ContentType.JSON;
 
-public class ReqresSpec {
+public class DemoqaSpec {
 
-    public static RequestSpecification reqresRequestSpec = with()
+    public static RequestSpecification demoqaRequestSpec = with()
             .filter(withCustomTemplates())
             .contentType(JSON)
             .log().all();
 
-    public static ResponseSpecification reqresResponseSpec200 = new ResponseSpecBuilder()
+    public static ResponseSpecification demoqaResponseSpec200 = new ResponseSpecBuilder()
             .expectStatusCode(200)
             .log(LogDetail.ALL)
             .build();
 
-    public static ResponseSpecification reqresResponseSpec404 = new ResponseSpecBuilder()
-            .expectStatusCode(404)
+    public static ResponseSpecification demoqaResponseSpec201 = new ResponseSpecBuilder()
+            .expectStatusCode(201)
             .log(LogDetail.ALL)
             .build();
 
-    public static ResponseSpecification reqresResponseSpec204 = new ResponseSpecBuilder()
-            .expectStatusCode(204)
-            .log(LogDetail.ALL)
-            .build();
 }
